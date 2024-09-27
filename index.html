@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мультяшные летающие шарики</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #c666f3;
+    }
+
+    .balloon {
+      position: absolute;
+      width: 80px;
+      height: 100px;
+      background: radial-gradient(circle at 30% 30%, #ffeb3b, #ff6f61);
+      border-radius: 50%;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+      animation: float 5s ease-in-out infinite;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-30px);
+      }
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    /* Анимация лопанья шарика */
+    @keyframes pop {
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.6;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 0;
+      }
+    }
+
+    .popped {
+      animation: pop 0.5s forwards;
+    }
+
+    /* Стили для поздравлений */
+    .message {
+      position: absolute;
+      font-size: 24px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #fff;
+      text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+      animation: fadeInOut 3s ease-in-out forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(1.2);
+      }
+    }
+
+    /* Стиль для большой надписи "С Днём Рождения!" */
+    .big-message {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 60px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #fff;
+      text-shadow: 4px 4px 10px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      animation: showMessage 2s forwards;
+    }
+
+    @keyframes showMessage {
+      0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+      }
+      100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <script>
+    const numberOfBalloons = 20;
+    let poppedBalloons = 0;
+    const messages = [
+      "С днём рождения!",
+      "Пусть сбудутся мечты!",
+      "Счастья и здоровья!",
+      "Много улыбок!",
+      "Незабываемого праздника!"
+    ];
+
+    // Функция создания шариков
+    function createBalloon() {
+      let balloonContainer = document.createElement('div');
+      balloonContainer.style.position = 'absolute';
+
+      let balloon = document.createElement('div');
+      balloon.classList.add('balloon');
+
+      balloonContainer.appendChild(balloon);
+
+      // Случайное расположение
+      balloonContainer.style.left = Math.random() * window.innerWidth + 'px';
+      balloonContainer.style.top = Math.random() * window.innerHeight + 'px';
+
+      // Лопанье шарика при клике и вывод поздравления
+      balloon.addEventListener('click', function() {
+        balloon.classList.add('popped');
+        
+        // Вывод случайного поздравления
+        const message = document.createElement('div');
+        message.classList.add('message');
+        message.innerText = messages[Math.floor(Math.random() * messages.length)];
+        
+        // Позиционируем поздравление на месте клика
+        message.style.left = balloonContainer.style.left;
+        message.style.top = balloonContainer.style.top;
+
+        document.body.appendChild(message);
+
+        // Убираем шарик и поздравление после анимации
+        setTimeout(() => {
+          balloonContainer.remove();
+          message.remove();
+          
+          // Увеличиваем количество лопнувших шариков
+          poppedBalloons++;
+
+          // Если все шарики лопнули, показываем поздравительную надпись
+          if (poppedBalloons === numberOfBalloons) {
+            showBigMessage();
+          }
+        }, 3000);
+      });
+
+      document.body.appendChild(balloonContainer);
+    }
+
+    // Создаём шарики
+    for (let i = 0; i < numberOfBalloons; i++) {
+      createBalloon();
+    }
+
+    // Функция для показа большой надписи "С Днём Рождения!"
+    function showBigMessage() {
+      const bigMessage = document.createElement('div');
+      bigMessage.classList.add('big-message');
+      bigMessage.innerText = 'С Днём Рождения, Анюта!';
+      document.body.appendChild(bigMessage);
+    }
+  </script>
+
+</body>
+</html>
